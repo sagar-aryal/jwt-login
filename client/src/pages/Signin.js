@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -12,15 +13,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signin = () => {
-  const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
+  const [values, setValues] = useState(" ");
 
-  const handleSubmit = (e) => {
+  const handleChange = async (e) => {
     e.preventDefault();
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/", {
+        ...values,
+      });
+      return response.data;
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
@@ -50,9 +59,7 @@ const Signin = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.email]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -64,9 +71,7 @@ const Signin = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.password]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>

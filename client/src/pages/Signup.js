@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,15 +12,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signup = () => {
-  const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
+  const [values, setValues] = useState(" ");
 
-  const handleSubmit = (e) => {
+  const handleChange = async (e) => {
     e.preventDefault();
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000", {
+        ...values,
+      });
+      return response.data;
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
@@ -49,9 +59,7 @@ const Signup = () => {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.firstName]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -62,9 +70,7 @@ const Signup = () => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.lastName]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -75,9 +81,7 @@ const Signup = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.email]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,9 +93,7 @@ const Signup = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.password]: e.target.value })
-                }
+                onChange={(e) => handleChange(e)}
               />
             </Grid>
           </Grid>
