@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,13 +10,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signup = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const [values, setValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -36,7 +38,7 @@ const Signup = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -47,6 +49,9 @@ const Signup = () => {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.firstName]: e.target.value })
+                }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -57,6 +62,9 @@ const Signup = () => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.lastName]: e.target.value })
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -67,6 +75,9 @@ const Signup = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.email]: e.target.value })
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -78,6 +89,9 @@ const Signup = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.password]: e.target.value })
+                }
               />
             </Grid>
           </Grid>
@@ -86,6 +100,7 @@ const Signup = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onSubmit={(e) => handleSubmit(e)}
           >
             Sign Up
           </Button>

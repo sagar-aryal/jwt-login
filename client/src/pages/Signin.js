@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
@@ -12,13 +12,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signin = () => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const [values, setValues] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -38,7 +40,7 @@ const Signin = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -48,6 +50,9 @@ const Signin = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.email]: e.target.value })
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -59,6 +64,9 @@ const Signin = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={(e) =>
+                  setValues({ ...values, [e.target.password]: e.target.value })
+                }
               />
             </Grid>
             <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
@@ -74,13 +82,15 @@ const Signin = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onSubmit={(e) => handleSubmit(e)}
           >
             Sign in
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
+              Don't have an account?
               <Link to="/signup" variant="body2">
-                Don't have an account? Sign up
+                Sign up
               </Link>
             </Grid>
           </Grid>
