@@ -1,26 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [cookies] = useCookies([]);
+
+  useEffect(() => {
+    if (cookies.jwt) {
+      navigate("/secret");
+    }
+  }, [cookies, navigate]);
+
   const [values, setValues] = useState({
     firstname: "",
     lastname: " ",
     email: " ",
     password: "",
   });
-
-  const navigate = useNavigate();
 
   const handleChange = async (e) => {
     e.preventDefault();

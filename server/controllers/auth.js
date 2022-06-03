@@ -40,7 +40,7 @@ export const signin = async (req, res, next) => {
 
     res.cookie("jwt", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 60 * 60 * 1000,
     });
     res.status(200).json({ user: user._id, created: true });
@@ -59,7 +59,7 @@ export const signup = async (req, res, next) => {
 
     res.cookie("jwt", token, {
       withCredentials: true,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 60 * 60 * 1000,
     });
     res.status(201).json({ user: user._id, created: true });

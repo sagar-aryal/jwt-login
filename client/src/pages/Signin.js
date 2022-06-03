@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -13,12 +14,19 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signin = () => {
+  const navigate = useNavigate();
+  const [cookies] = useCookies([]);
+
+  useEffect(() => {
+    if (cookies.jwt) {
+      navigate("/secret");
+    }
+  }, [cookies, navigate]);
+
   const [values, setValues] = useState({
     email: " ",
     password: "",
   });
-
-  const navigate = useNavigate();
 
   const handleChange = async (e) => {
     e.preventDefault();
