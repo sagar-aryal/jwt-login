@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import Avatar from "@mui/material/Avatar";
@@ -13,7 +13,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signin = () => {
-  const [values, setValues] = useState(" ");
+  const [values, setValues] = useState({
+    email: " ",
+    password: "",
+  });
+
+  const navigate = useNavigate();
 
   const handleChange = async (e) => {
     e.preventDefault();
@@ -23,12 +28,21 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/", {
-        ...values,
-      });
-      return response.data;
+      const response = await axios.post(
+        "http://localhost:5000",
+        {
+          ...values,
+        },
+        { withCredentials: true }
+      );
+      const data = response.data;
+
+      if (data) {
+        navigate("/secret");
+      }
     } catch (err) {
-      console.log(err.message);
+      //console.log(err.message);
+      alert("⚠️Invalid Credientials");
     }
   };
 
@@ -49,7 +63,12 @@ const Signin = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          sx={{ mt: 3 }}
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -87,7 +106,6 @@ const Signin = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            onSubmit={(e) => handleSubmit(e)}
           >
             Sign in
           </Button>

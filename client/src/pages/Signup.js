@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -12,7 +13,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 const Signup = () => {
-  const [values, setValues] = useState(" ");
+  const [values, setValues] = useState({
+    firstname: "",
+    lastname: " ",
+    email: " ",
+    password: "",
+  });
+
+  const navigate = useNavigate();
 
   const handleChange = async (e) => {
     e.preventDefault();
@@ -22,12 +30,21 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000", {
-        ...values,
-      });
-      return response.data;
+      const response = await axios.post(
+        "http://localhost:5000/signup",
+        {
+          ...values,
+        },
+        { withCredentials: true }
+      );
+      const data = response.data;
+
+      if (data) {
+        navigate("/secret");
+      }
     } catch (err) {
-      console.log(err.message);
+      //console.log(err.message);
+      alert("Fill all the required inputs!");
     }
   };
 
@@ -48,51 +65,48 @@ const Signup = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 3 }}>
+
+        <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
+                name="firstname"
+                id="firstname"
                 label="First Name"
+                required
                 autoFocus
+                fullWidth
                 onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                name="lastname"
+                id="lastname"
+                label="Last Name"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
                 onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
-                fullWidth
+                name="email"
                 id="email"
                 label="Email Address"
-                name="email"
-                autoComplete="email"
+                required
+                fullWidth
                 onChange={(e) => handleChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
-                fullWidth
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="new-password"
+                required
+                fullWidth
                 onChange={(e) => handleChange(e)}
               />
             </Grid>
@@ -102,7 +116,6 @@ const Signup = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            onSubmit={(e) => handleSubmit(e)}
           >
             Sign Up
           </Button>
