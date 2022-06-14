@@ -12,6 +12,3 @@ JWT Authentication with React, Node, MongoDB and Express
 - Mongoose Middlewares
 - Private Routes using Cookies and JWT in React
 
-</br>
-
-### 👉 More about JWT https://jwt.io/introduction
