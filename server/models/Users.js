@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+// Defining the user schema
 const userSchema = new mongoose.Schema({
   firstname: {
     type: String,
@@ -20,20 +21,29 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// bcrypt password before saving to db
+// bcrypt/hash password before saving to db
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
+// removing sensitive-field (password)
+userSchema.methods.removeSensitiveUserField = async function () {
+  // clone object
+  const userObject = this.user.toObject();
+  delete userObject.password;
+  return userObject;
+};
+
+// authenticate user by matching email and password
 userSchema.statics.login = async function (email, password) {
   try {
     const user = await this.findOne({ email });
     if (user) {
       const auth = await bcrypt.compare(password, user.password);
       if (auth) {
-        return user;
+        return user.removeSensitiveUserField();
       }
     }
   } catch (err) {
@@ -41,8 +51,7 @@ userSchema.statics.login = async function (email, password) {
   }
 };
 
-userSchema.statics.login;
-
+// Creating the users model
 const Users = mongoose.model("Users", userSchema);
 
 export default Users;
